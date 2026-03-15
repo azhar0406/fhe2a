@@ -41,6 +41,7 @@ The smart contract never sees the plaintext key. Encryption, storage, and decryp
 - **Category System** — Game, Software, Subscription, Gift Card, Other (admin-extensible)
 - **Admin Controls** — Pause/unpause, ban sellers, adjust fees (0–10%), manage categories
 - **Dynamic Product Images** — Auto-detects dark logos and switches background for readability
+- **Fully On-Chain** — No backend server needed; frontend reads directly from the blockchain
 
 ---
 
@@ -54,6 +55,7 @@ The smart contract never sees the plaintext key. Encryption, storage, and decryp
 | FHE | @zama-fhe/relayer-sdk (WASM), EIP-712 signed decryption |
 | 3D | Three.js, React Three Fiber |
 | Dev | Hardhat, hardhat-toolbox |
+| Hosting | Vercel (frontend only — no backend required) |
 
 ---
 
@@ -84,9 +86,8 @@ fhe2a/
 │   │   │   └── contracts.ts         # ABIs & addresses
 │   │   └── types/                    # TypeScript interfaces
 │   └── public/wasm/                  # Zama WASM modules
-├── backend/                          # Express API (optional)
 ├── hardhat.config.ts
-└── .env                              # Deployer key, RPC, Etherscan
+└── .env.example                      # Environment template
 ```
 
 ---
@@ -102,7 +103,7 @@ fhe2a/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/your-username/fhe2a.git
+git clone https://github.com/azhar0406/fhe2a.git
 cd fhe2a
 npm install
 cd frontend && npm install && cd ..
@@ -110,14 +111,14 @@ cd frontend && npm install && cd ..
 
 ### 2. Environment Setup
 
-**Root `.env`:**
+**Root `.env`** (for contract deployment only):
 ```env
 PRIVATE_KEY=your_deployer_private_key
 SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 ETHERSCAN_API_KEY=your_etherscan_key
 ```
 
-**Frontend `.env.local`:**
+**Frontend `frontend/.env.local`:**
 ```env
 NEXT_PUBLIC_USDZ_ADDRESS=0x3edf60dd017ace33a0220f78741b5581c385a1ba
 NEXT_PUBLIC_CUSDZ_ADDRESS=0x7215691f60c4fa7bb82c5ac44c7d57dc32bb0493
@@ -149,6 +150,26 @@ Open http://localhost:3001
 1. Go to `/admin/seed` (must be the deployer wallet)
 2. Click **Seed All 12 Listings** — encrypts and creates listings on-chain
 3. Browse at `/marketplace`
+
+---
+
+## Deploy to Vercel
+
+The frontend is fully self-contained — no backend needed. It reads everything directly from the blockchain.
+
+1. Import the repo on [Vercel](https://vercel.com)
+2. Set **Root Directory** to `frontend`
+3. Add these **Environment Variables**:
+
+| Key | Value |
+|-----|-------|
+| `NEXT_PUBLIC_USDZ_ADDRESS` | `0x3edf60dd017ace33a0220f78741b5581c385a1ba` |
+| `NEXT_PUBLIC_CUSDZ_ADDRESS` | `0x7215691f60c4fa7bb82c5ac44c7d57dc32bb0493` |
+| `NEXT_PUBLIC_MARKETPLACE_ADDRESS` | `0x5A7CF0188659D84e290bC2746528987b57082D2c` |
+| `NEXT_PUBLIC_CHAIN_ID` | `11155111` |
+| `NEXT_PUBLIC_RPC_URL` | `https://ethereum-sepolia-rpc.publicnode.com` |
+
+4. Deploy
 
 ---
 
@@ -221,7 +242,7 @@ After releasing funds, click **Resell License** → set new price → listed on 
 ## Scripts
 
 ```bash
-# Root
+# Root (contract development)
 npm run compile          # Compile contracts
 npm run test             # Run Hardhat tests
 npm run deploy:sepolia   # Deploy to Sepolia
