@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { useMarketplace } from "@/hooks/useMarketplace";
-import { api } from "@/lib/api";
+import { getAllCategories } from "@/lib/chain";
 import { DEFAULT_CATEGORIES, type CategoryData } from "@/types";
 import { CheckCircle2, AlertCircle, Lock, ImageIcon } from "lucide-react";
 
@@ -23,11 +23,11 @@ export function CreateListing() {
   const [categories, setCategories] = useState<CategoryData[]>([]);
 
   useEffect(() => {
-    api.getCategories()
-      .then((res) => {
-        const active = res.data.filter((c: CategoryData) => c.active);
-        setCategories(active);
-        if (active.length > 0 && !category) setCategory(active[0].name);
+    getAllCategories()
+      .then((names) => {
+        const cats = names.map((name: string) => ({ name, count: 0, threshold: 0, active: true }));
+        setCategories(cats);
+        if (cats.length > 0 && !category) setCategory(cats[0].name);
       })
       .catch(() => {
         setCategories(DEFAULT_CATEGORIES.map((name) => ({ name, count: 0, threshold: 0, active: true })));
