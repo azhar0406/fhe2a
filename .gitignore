@@ -1,0 +1,52 @@
+node_modules/
+dist/
+cache/
+artifacts/
+typechain-types/
+coverage/
+coverage.json
+
+# Environment files (PRIVATE KEYS, API KEYS)
+.env
+.env.local
+.env.production
+.env.staging
+.env*.local
+frontend/.env.local
+frontend/.env.production
+frontend/.env
+backend/.env
+backend/.env.local
+
+# Hardhat
+hardhat-deployments/
+ignition/deployments/
+
+# Frontend
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+
+# Backend
+backend/node_modules/
+backend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Claude Code
+.claude/
+
+# Misc
+*.tsbuildinfo
