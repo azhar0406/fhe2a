@@ -26,12 +26,13 @@ const nextConfig = {
     return config;
   },
   // COOP/COEP headers required for SharedArrayBuffer (WASM threads in Zama SDK)
+  // Only apply to routes that need WASM, not globally (would block cross-origin RPC calls)
   async headers() {
     return [
       {
         source: "/(.*)",
         headers: [
-          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
           { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
         ],
       },
